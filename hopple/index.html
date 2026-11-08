@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hopple — One letter at a time</title>
+  <meta name="description" content="Connect two four-letter words in a daily word puzzle. Change one letter per move, use real words, and see how few moves you need. You get two undos.">
+  <meta name="theme-color" content="#607047">
+  <meta property="og:title" content="Hopple — One letter at a time">
+  <meta property="og:description" content="Change one letter at a time to get from the start word to the goal. Play today’s puzzle or try Practice.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/frog.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/words.js" defer></script>
+  <script src="js/solver.js" defer></script>
+  <script src="js/river.js" defer></script>
+  <script src="js/game.js" defer></script>
+  <script src="js/ui.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#board-wrapper">Skip to puzzle</a>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Hopple home"><span class="brand-word" aria-hidden="true">H<span class="brand-pad">o</span>pple</span></a>
+      <nav class="header-actions" aria-label="Help and settings">
+        <button id="btn-help" class="icon-btn" aria-label="How to play" title="How to play">?</button>
+        <button id="btn-settings" class="icon-btn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6M16 14v6"/></svg></button>
+      </nav>
+    </header>
+    <div class="page-layout">
+      <main id="app-container">
+        <div class="puzzle-header">
+        <nav class="mode-tabs" aria-label="Game mode">
+          <button id="tab-daily" aria-current="page">Daily</button>
+          <button id="tab-practice">Practice</button>
+        </nav>
+        <div id="day-notice" class="day-notice" hidden><span>You’re finishing an earlier daily.</span><button id="btn-today" class="text-btn">Play today’s</button></div>
+        <section class="goal-card" aria-label="Puzzle goal">
+          <div class="goal-top-row">
+            <div class="word-pill"><span>Start</span><strong id="target-start-word">----</strong></div>
+            <svg class="goal-arrow" viewBox="0 0 48 24" aria-hidden="true"><path d="M3 12h40m-8-8 8 8-8 8"/></svg>
+            <div class="word-pill"><span>Goal</span><strong id="target-goal-word">----</strong></div>
+          </div>
+          <div class="goal-bottom-row"><span id="header-mode">Daily puzzle</span><span class="meta-dot" aria-hidden="true">·</span><span id="header-steps">0 moves</span></div>
+        </section>
+        </div>
+        <div id="river-scene" class="river-scene">
+          <div id="board-wrapper" tabindex="0" role="region" aria-label="River word path. Type a four-letter word, then press Enter.">
+            <div id="ladder-container"></div>
+          </div>
+          <img id="river-frog" class="river-frog" src="assets/frog.png" width="52" height="52" alt="" aria-hidden="true">
+          <button id="btn-replay-crossing" class="replay-crossing" aria-label="Replay the frog crossing" hidden>↻</button>
+        </div>
+        <div class="controls-dock">
+        <section class="action-bar" aria-label="Puzzle actions">
+          <button id="btn-undo" class="action-btn" disabled><span aria-hidden="true">↶</span> Undo <span id="undo-count" class="count">2</span></button>
+          <button id="btn-hint" class="action-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 4h4M9 15c0-2-3-3-3-7a6 6 0 0 1 12 0c0 4-3 5-3 7z"/></svg>Hint</button>
+          <button id="btn-results" class="action-btn" hidden>Results</button>
+          <button id="btn-more" class="icon-btn more-btn" aria-label="More puzzle options" title="More puzzle options">···</button>
+        </section>
+        <p class="desktop-input-tip">Type a word · Enter to hop</p>
+        <div id="keyboard-container" role="group" aria-label="On-screen keyboard"></div>
+        <div class="below-game"><button id="btn-stats" class="text-btn">Statistics</button><span aria-hidden="true">·</span><span id="save-status">Saved on this device</span></div>
+        </div>
+      </main>
+      <!-- Reserved inventory; no ad provider or tracking is loaded. Enable with js/ads.js. -->
+      <aside id="ad-sidebar" class="ad-slot ad-sidebar" aria-label="Advertisements" hidden><span>Advertisements</span><div class="ad-mount" data-ad-placement="sidebar"></div></aside>
+    </div>
+    <aside id="ad-bottom" class="ad-slot ad-bottom" aria-label="Advertisements" hidden><span>Advertisements</span><div class="ad-mount" data-ad-placement="bottom"></div></aside>
+    <footer class="site-footer"><span>Hopple</span><nav aria-label="Site information"><button class="text-btn" data-open="modal-about">About</button><button class="text-btn" data-open="modal-privacy">Privacy</button></nav></footer>
+  </div>
+  <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
+  <p id="move-announcement" class="sr-only" role="status" aria-live="polite"></p>
+  <noscript><p class="noscript">Hopple needs JavaScript to play. Enable JavaScript and reload this page.</p></noscript>
+
+  <div id="modal-help" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="help-title" tabindex="-1">
+    <div class="modal-header"><h2 id="help-title">How to play</h2><button class="modal-close icon-btn" aria-label="Close how to play">×</button></div>
+    <p>Get from <strong>COLD</strong> to <strong>WARM</strong> by changing <strong>one letter at a time.</strong> Each new word has to be a real word.</p>
+    <div class="example-ladder" aria-label="COLD, CORD, WORD, WARD, WARM. One letter changes each move.">
+      <div><code>COLD</code><span>Start here</span></div><div><code>CO<b>R</b>D</code><span>Change L to R</span></div><div><code><b>W</b>ORD</code><span>Change C to W</span></div><div><code>W<b>A</b>RD</code><span>Change O to A</span></div><div><code>WAR<b>M</b></code><span>Change D to M. Done!</span></div>
+    </div>
+    <ul class="rules"><li><strong>Two undos.</strong> Use Undo to take back a move. Backspace just deletes what you’re typing.</li><li><strong>A lily pad means a match.</strong> After you enter a valid word, it appears when the letter matches the goal in that spot. You can still change the letter.</li><li><strong>Stuck?</strong> Tap Hint. Tap again if you need more help.</li></ul>
+    <p class="muted small">Use your keyboard or the keys below. Daily puzzles can be solved in 4–6 moves, but you can take more if you need to.</p>
+    <button class="btn-primary modal-close">Got it</button>
+  </section></div>
+
+  <div id="modal-settings" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settings-title" tabindex="-1">
+    <div class="modal-header"><h2 id="settings-title">Settings</h2><button class="modal-close icon-btn" aria-label="Close settings">×</button></div>
+    <label class="setting-row" for="theme-toggle"><span><strong>Dark theme</strong><small>Use a dark background.</small></span><input type="checkbox" id="theme-toggle" role="switch"></label>
+    <label class="setting-row" for="sound-toggle"><span><strong>Sound effects</strong><small>Play sounds when you type and finish a puzzle.</small></span><input type="checkbox" id="sound-toggle" role="switch"></label>
+    <p class="muted small">Settings and progress are saved in this browser. No account needed.</p>
+  </section></div>
+
+  <div id="modal-options" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="options-title" tabindex="-1">
+    <div class="modal-header"><h2 id="options-title">Puzzle options</h2><button class="modal-close icon-btn" aria-label="Close puzzle options">×</button></div>
+    <div class="option-list"><button id="btn-solution" class="btn-secondary">Reveal solution</button><button id="btn-challenge-link" class="btn-secondary">Copy puzzle link</button><button id="btn-new-game" class="btn-secondary">New practice puzzle</button></div>
+  </section></div>
+
+  <div id="modal-new-game" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="practice-title" tabindex="-1">
+    <div class="modal-header"><h2 id="practice-title">Practice</h2><button class="modal-close icon-btn" aria-label="Close practice selection">×</button></div>
+    <p>Pick a level, or choose your own words.</p>
+    <div class="difficulty-options"><button class="btn-secondary" data-difficulty="easy">Easy<small>4 moves</small></button><button class="btn-secondary" data-difficulty="medium">Medium<small>5 moves</small></button><button class="btn-secondary" data-difficulty="hard">Hard<small>6 moves</small></button></div>
+    <p id="practice-note" class="muted small">Starting a new practice puzzle replaces the one you’re playing. Your daily is saved.</p>
+    <h3 class="form-title">Challenge a friend</h3>
+    <form id="form-custom-puzzle"><div class="form-grid"><label>Start word<input id="input-custom-start" name="start" maxlength="4" minlength="4" pattern="[A-Za-z]{4}" placeholder="COLD" autocomplete="off" autocapitalize="characters" spellcheck="false" required></label><label>Goal word<input id="input-custom-target" name="target" maxlength="4" minlength="4" pattern="[A-Za-z]{4}" placeholder="WARM" autocomplete="off" autocapitalize="characters" spellcheck="false" required></label></div><button class="btn-primary" type="submit">Play these words</button></form>
+  </section></div>
+
+  <div id="modal-confirm" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title" tabindex="-1">
+    <div class="modal-header"><h2 id="confirm-title">Show the answer?</h2><button class="modal-close icon-btn" aria-label="Cancel reveal">×</button></div>
+    <p>This ends the puzzle and shows a solution. It won’t count as a win or keep your daily streak going.</p>
+    <div class="modal-actions"><button class="btn-secondary modal-close">Keep playing</button><button id="btn-confirm-reveal" class="btn-primary">Reveal solution</button></div>
+  </section></div>
+
+  <div id="modal-solution" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="solution-title" tabindex="-1">
+    <div class="modal-header"><h2 id="solution-title">Shortest solution</h2><button class="modal-close icon-btn" aria-label="Close solution">×</button></div>
+    <p>There may be other routes with the same number of moves.</p><div id="solution-path-list" class="solution-list"></div>
+    <button class="btn-secondary modal-close">Back to puzzle</button>
+  </section></div>
+
+  <div id="modal-win" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="win-title" tabindex="-1">
+    <div class="modal-header"><span class="eyebrow">ACROSS THE RIVER</span><button class="modal-close icon-btn" aria-label="Close results">×</button></div>
+    <h2 id="win-title" class="result-title">Nice!</h2><p id="win-badge" class="result-subtitle"></p>
+    <div id="win-steps-info" class="result-grid"></div><p id="win-assistance" class="muted small"></p><p id="next-daily" class="muted small"></p>
+    <div class="modal-actions"><button id="btn-win-share" class="btn-primary">Share result</button><button id="btn-win-next" class="btn-secondary">Play practice</button></div>
+    <aside id="ad-results" class="ad-slot ad-results" aria-label="Advertisements" hidden><span>Advertisements</span><div class="ad-mount" data-ad-placement="results"></div></aside>
+  </section></div>
+
+  <div id="modal-stats" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="stats-title" tabindex="-1">
+    <div class="modal-header"><h2 id="stats-title">Your stats</h2><button class="modal-close icon-btn" aria-label="Close statistics">×</button></div>
+    <div class="stats-tabs" role="group" aria-label="Statistics mode"><button id="stats-daily" class="btn-secondary" aria-pressed="true">Daily</button><button id="stats-practice" class="btn-secondary" aria-pressed="false">Practice</button></div>
+    <div class="stats-grid"><div><strong id="stat-completed">0</strong><span>Finished</span></div><div><strong id="stat-solved">0</strong><span>Solved</span></div><div><strong id="stat-streak">0</strong><span id="streak-label">Day streak</span></div><div><strong id="stat-perfect">0</strong><span>Perfect</span></div></div>
+    <h3>Extra moves</h3><div id="stats-distribution" class="dist-container"></div>
+    <p class="muted small">Perfect means a shortest route without hints. Undos are allowed. Revealed attempts count as finished, not solved. Custom challenges are excluded.</p><p class="muted small">Statistics belong to this browser. Clearing site data removes them.</p>
+  </section></div>
+
+  <div id="modal-about" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="about-title" tabindex="-1"><div class="modal-header"><h2 id="about-title">About Hopple</h2><button class="modal-close icon-btn" aria-label="Close about">×</button></div><p>Change one letter per move to get from the start word to the goal. Matching letters get lily pads. The frog follows your latest word along the left bank. Solve it and it hops across.</p><p>Daily puzzles have a shortest solution of 4–6 moves. There’s a new one at 00:00 UTC. For more puzzles, try Practice.</p><p class="muted small">The included dictionary is a limited word list; some English words aren’t accepted. Puzzle difficulty is based on shortest route length, not vocabulary familiarity.</p></section></div>
+  <div id="modal-privacy" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="privacy-title" tabindex="-1"><div class="modal-header"><h2 id="privacy-title">Privacy</h2><button class="modal-close icon-btn" aria-label="Close privacy">×</button></div><p>This version saves puzzle progress, results, and preferences in your browser’s local storage. There are no accounts, analytics scripts, or advertising scripts included in this version.</p><p>Sharing uses your device’s share options or clipboard. Custom puzzle links contain the two words you selected.</p><p class="muted small">Your hosting provider may process ordinary connection data, such as IP addresses and request logs. Deleting this site’s browser data removes saved games and settings.</p></section></div>
+  <script src="js/ads.js" defer></script>
+</body>
+</html>
