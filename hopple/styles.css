@@ -23,7 +23,7 @@
 * { box-sizing:border-box; }
 body { margin:0; isolation:isolate; color:var(--ink); background:#607047; font-size:15px; line-height:1.5; }
 body::before {
-  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  content:""; position:fixed; inset:0; bottom:auto; height:var(--viewport-height,100dvh); z-index:-1; pointer-events:none;
   background:linear-gradient(var(--scene-tint),var(--scene-tint)),url("assets/river-background.png") center / cover no-repeat;
   image-rendering:pixelated;
 }
@@ -249,4 +249,54 @@ strong { font-weight:650; }
 }
 @media(max-height:690px) and (max-width:700px) {
   .goal-card { height:116px; padding-top:18px; padding-bottom:24px; grid-template-rows:minmax(0,1fr) 20px; }
+}
+
+/* Mobile layout: wider water, square stepping stones and a compact header. */
+@media(max-width:700px) {
+  body::before { background-size:150% 100%; }
+  .site-header { height:54px; padding:6px 14px; }
+  .brand { font-size:26px; }
+  .brand-pad { width:23px; height:23px; }
+  #app-container { height:calc(var(--viewport-height,100dvh) - 54px); min-height:480px; }
+  .puzzle-header { width:calc(100% - 24px); transform:none; }
+  .mode-tabs { margin-bottom:5px; }
+  .mode-tabs button { font-size:13px; padding:6px 18px; }
+  .day-notice { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:4px 10px; width:max-content; max-width:100%; padding:3px 10px; margin:0 auto 4px; background:#203d365c; color:#fff7df; font-size:11px; line-height:18px; }
+  .day-notice .text-btn { padding:0; font-weight:600; }
+  .goal-card { height:116px; padding:20px 25px 23px 32px; grid-template-rows:minmax(0,1fr) 20px; gap:3px; }
+  .goal-top-row { gap:14px; }
+  .word-pill>span { font-size:9px; line-height:12px; letter-spacing:1.3px; }
+  .word-pill strong { font-size:25px; line-height:1.2; letter-spacing:2px; }
+  .goal-arrow { margin-top:10px; }
+  .goal-bottom-row { font-size:11px; line-height:18px; margin:0; gap:7px; }
+  .river-scene { min-height:120px; margin-top:0; }
+  #board-wrapper { padding-top:10px; padding-bottom:20px; }
+  #ladder-container { gap:14px; }
+  .word-row { height:54px; gap:3px; }
+  .tile { width:min(100%,52px); height:auto; aspect-ratio:1; font-size:25px; padding-bottom:3px; }
+  .tile-match-target { padding:14px 0 0; line-height:.7; }
+  .tile-focus { filter:none; }
+  .tile-focus::before { content:""; position:absolute; bottom:1px; height:2px; width:16px; background:#fff2bd; }
+  .tile-input { opacity:.7; }
+  .tile-input:not(:empty),.tile-focus { opacity:1; }
+  .row-badge { right:calc(100% + 7px); bottom:4px; }
+  .controls-dock { gap:6px; padding:5px 8px max(8px,env(safe-area-inset-bottom)); }
+  .action-bar { padding:1px 5px; }
+  .action-btn { height:36px; padding:0 11px; font-size:14px; }
+  #keyboard-container { gap:5px; }
+  .keyboard-row { gap:4px; }
+  .key-btn { height:44px; font-size:17px; }
+  .key-wide { font-size:11px; }
+  .below-game { font-size:10px; gap:8px; }
+}
+@media(max-width:359px) {
+  .word-pill strong { font-size:23px; }
+  .tile { font-size:23px; }
+  .word-row { height:50px; }
+
+  .key-btn { height:42px; }
+}
+@media(max-height:600px) and (max-width:700px) {
+  .goal-card { height:108px; padding-top:18px; padding-bottom:22px; }
+  #ladder-container { gap:10px; }
 }

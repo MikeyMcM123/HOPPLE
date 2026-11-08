@@ -7,22 +7,30 @@ const River = {
     return { stage: document.getElementById('river-scene'), frog: document.getElementById('river-frog'),
       replay: document.getElementById('btn-replay-crossing') };
   },
-  shoreAt(screenY, width = window.innerWidth, height = window.innerHeight) {
-    // On phones the full illustration is fitted into the viewport so both
-    // grass banks stay visible. Desktop uses the usual centered cover crop.
+  viewportHeight() {
+    const viewport = window.visualViewport;
+    return viewport && (!viewport.scale || viewport.scale === 1) && viewport.height > 0 ? viewport.height : window.innerHeight;
+  },
+  shoreAt(screenY, width = window.innerWidth, height = this.viewportHeight()) {
+    // Phones zoom the landscape horizontally to give the word rows more water.
+    // This matches the 150% x 100% CSS background; desktop uses a cover crop.
     const phone = width <= 700;
     const size = Math.max(width, height);
     const sourceY = phone ? screenY / height : (screenY + (size - height) / 2) / size;
     const sample = Math.max(0, Math.min(this.shore.length - 1, sourceY * (this.shore.length - 1)));
     const i = Math.floor(sample), next = Math.min(i + 1, this.shore.length - 1), fraction = sample - i;
     const edge = n => this.shore[i][n] + (this.shore[next][n] - this.shore[i][n]) * fraction;
-    const scaled = phone ? width : size, crop = phone ? 0 : (size - width) / 2;
+    const scaled = phone ? width * 1.5 : size, crop = phone ? width * .25 : (size - width) / 2;
     return { left:edge(0) * scaled - crop, right:edge(1) * scaled - crop };
   },
   layout() {
     const { stage } = this.elements();
     if (!stage || !Number.isFinite(window.innerWidth) || !stage.getBoundingClientRect) return;
-    const width = window.innerWidth, height = window.innerHeight;
+    const width = window.innerWidth, height = this.viewportHeight();
+    if (height !== this.lastViewportHeight) {
+      document.documentElement?.style?.setProperty('--viewport-height', height + 'px');
+      this.lastViewportHeight = height;
+    }
     const bounds = stage.getBoundingClientRect();
     for (const row of stage.querySelectorAll('.word-row')) {
       const rect = row.getBoundingClientRect();
@@ -40,7 +48,8 @@ const River = {
       }
     }
     const header = document.querySelector?.('.puzzle-header');
-    if (header) {
+    if (header && width <= 700) { header.style.transform = ''; }
+    else if (header) {
       const rect = header.getBoundingClientRect();
       const shore = this.shoreAt(rect.top + rect.height / 2, width, height);
       const center = Math.max(rect.width / 2 + 6, Math.min(width - rect.width / 2 - 6, (shore.left + shore.right) / 2));
