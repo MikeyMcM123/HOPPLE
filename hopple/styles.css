@@ -363,7 +363,7 @@ strong { font-weight:650; }
   .brand-tagline { font-size:11px; }
   .word-start strong { font-size:31px; }
   .word-goal strong { font-size:29px; }
-  .bank-message { top:33%; left:78%; right:auto; width:20%; font-size:11px; line-height:1.5; }
+  .bank-message { display:none; }
   .win-meme figcaption span { font-size:16px; }
 }
 @media(max-width:359px) {
