@@ -9,19 +9,20 @@
   <meta property="og:title" content="Hopple — One letter at a time">
   <meta property="og:description" content="Change one letter at a time to get from the start word to the goal. Play today’s puzzle or try Practice.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="assets/frog.png" type="image/png">
+  <link rel="icon" href="assets/tab-icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="js/words.js" defer></script>
   <script src="js/solver.js" defer></script>
   <script src="js/river.js" defer></script>
   <script src="js/game.js" defer></script>
+  <script src="js/memes.js" defer></script>
   <script src="js/ui.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#board-wrapper">Skip to puzzle</a>
   <div class="site-shell">
     <header class="site-header">
-      <a class="brand" href="./" aria-label="Hopple home"><span class="brand-word" aria-hidden="true">H<span class="brand-pad">o</span>pple</span></a>
+      <div class="brand-lockup"><a class="brand" href="./" aria-label="Hopple home"><span class="brand-word" aria-hidden="true">H<span class="brand-pad">o</span>ppl<span class="brand-last">e</span></span></a><p class="brand-tagline">Help the frog cross the river</p></div>
       <nav class="header-actions" aria-label="Help and settings">
         <button id="btn-help" class="icon-btn" aria-label="How to play" title="How to play">?</button>
         <button id="btn-settings" class="icon-btn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6M16 14v6"/></svg></button>
@@ -30,16 +31,16 @@
     <div class="page-layout">
       <main id="app-container">
         <div class="puzzle-header">
+        <div id="day-notice" class="day-notice" hidden><span>Earlier daily</span><button id="btn-today" class="text-btn">Play today</button></div>
+        <section class="goal-card" aria-label="Puzzle goal">
+          <div class="goal-art">
         <nav class="mode-tabs" aria-label="Game mode">
           <button id="tab-daily" aria-current="page">Daily</button>
           <button id="tab-practice">Practice</button>
         </nav>
-        <div id="day-notice" class="day-notice" hidden><span>Earlier daily</span><button id="btn-today" class="text-btn">Play today</button></div>
-        <section class="goal-card" aria-label="Puzzle goal">
-          <div class="goal-top-row">
-            <div class="word-pill"><span>Start</span><strong id="target-start-word">----</strong></div>
-            <svg class="goal-arrow" viewBox="0 0 48 24" aria-hidden="true"><path d="M3 12h40m-8-8 8 8-8 8"/></svg>
-            <div class="word-pill"><span>Goal</span><strong id="target-goal-word">----</strong></div>
+
+            <div class="word-pill word-start"><span>Start</span><strong id="target-start-word">----</strong></div>
+            <div class="word-pill word-goal"><span>End</span><strong id="target-goal-word">----</strong></div>
           </div>
           <div class="goal-bottom-row"><span id="header-mode">Daily puzzle</span><span class="meta-dot" aria-hidden="true">·</span><span id="header-steps">0 moves</span></div>
         </section>
@@ -67,6 +68,7 @@
       <aside id="ad-sidebar" class="ad-slot ad-sidebar" aria-label="Advertisements" hidden><span>Advertisements</span><div class="ad-mount" data-ad-placement="sidebar"></div></aside>
     </div>
     <aside id="ad-bottom" class="ad-slot ad-bottom" aria-label="Advertisements" hidden><span>Advertisements</span><div class="ad-mount" data-ad-placement="bottom"></div></aside>
+    <p class="bank-message">the grass is greener over here</p>
     <footer class="site-footer"><span>Hopple</span><nav aria-label="Site information"><button class="text-btn" data-open="modal-about">About</button><button class="text-btn" data-open="modal-privacy">Privacy</button></nav></footer>
   </div>
   <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -120,6 +122,7 @@
   <div id="modal-win" class="modal-overlay"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="win-title" tabindex="-1">
     <div class="modal-header"><span class="eyebrow">ACROSS THE RIVER</span><button class="modal-close icon-btn" aria-label="Close results">×</button></div>
     <h2 id="win-title" class="result-title">Nice!</h2><p id="win-badge" class="result-subtitle"></p>
+    <figure id="win-meme" class="win-meme" role="img" hidden><img id="win-meme-image" alt="" aria-hidden="true"><figcaption aria-hidden="true"><span id="win-meme-top"></span><span id="win-meme-bottom"></span></figcaption></figure>
     <div id="win-steps-info" class="result-grid"></div><p id="win-assistance" class="muted small"></p><p id="next-daily" class="muted small"></p>
     <div class="modal-actions"><button id="btn-win-share" class="btn-primary">Share result</button><button id="btn-win-next" class="btn-secondary">Play practice</button></div>
     <aside id="ad-results" class="ad-slot ad-results" aria-label="Advertisements" hidden><span>Advertisements</span><div class="ad-mount" data-ad-placement="results"></div></aside>

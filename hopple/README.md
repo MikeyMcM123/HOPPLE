@@ -32,7 +32,7 @@ If you upload the contents of hopple directly at the repository root instead, us
 ## Included files
 
 - index.html and styles.css: page structure and appearance.
-- js/: the six active game scripts, including the dictionary and solver.
+- js/: the seven active game scripts, including the dictionary and solver.
 - assets/: your river, frog and lily pad, plus the log and rock drawings.
 
 Development scripts, tests and artwork notes are in the separate hopple-development.zip download. There is no build step or package installation needed to publish this folder. No analytics or advertising provider is loaded.
@@ -46,3 +46,15 @@ The expansion uses lowercase SCOWL-derived Hunspell entries and their explicitly
 ## Pixel theme
 
 The logo uses a lily pad in place of the o. The original Hopple Pixel display font is bundled locally in assets/hopple-pixel.woff; there are no external font requests. The log labels and long instructions keep a readable system font. The frog turns toward the river before crossing on a win; reduced-motion users go directly to results.
+
+The browser tab uses assets/tab-icon.svg. The header still spells Hopple, using assets/logo-e.svg for your outlined e and the lily pad for its o. Include both new SVGs when uploading an update; the header has no animated logo frog.
+
+## Win memes
+
+Daily wins use a date-stable 70-caption rotation, including the taxes, flying and Wednesday jokes. It repeats after ten weeks; reopening a daily keeps its original caption. Practice and custom wins use the same UTC-day Friday countdown or weekend greeting every time that day. Thursday displays “Tomorrow is Friday” using the same blank portrait and light live text as the other days. Revealed solutions do not show a win meme.
+
+The blank photo is included locally as assets/frog-meme.png. Captions remain live text with a fine dark edge; no image or caption service is contacted. The captioned example is kept only in the development references folder.
+
+The outlined e uses the original drawing at 28 × 36 CSS pixels, without rotation, to keep its pixel grid sharp. “Help the frog cross the river” sits below the wordmark, and “the grass is greener over here” sits on the right bank. The left log word sits slightly lower and larger; both words have a fine black outline.
+
+For this update, replace index.html, styles.css and js/memes.js in your existing hopple folder, then commit and push.
