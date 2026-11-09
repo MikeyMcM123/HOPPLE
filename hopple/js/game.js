@@ -19,7 +19,7 @@ class LadderGame {
     } else {
       const lastKey = Store.get('active');
       const last = typeof lastKey === 'string' ? Store.get('session_' + lastKey) : null;
-      if (last && (last.mode !== 'daily' || !last.over || last.dateKey === new Date().toISOString().slice(0, 10)) && this.restore(lastKey, last)) UI.renderAll();
+      if (last && (last.mode !== 'daily' || !last.over || last.dateKey === new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' })) && this.restore(lastKey, last)) UI.renderAll();
       else this.startDailyGame();
     }
     window.addEventListener('keydown', this.handleKeyDown);
@@ -83,6 +83,17 @@ class LadderGame {
       !Number.isInteger(s.undos) || s.undos < 0 || s.undos > 2 ||
       !Number.isInteger(s.hints) || s.hints < 0 || !/^[A-Z]{0,4}$/.test(s.input || '') ||
       (s.mode === 'daily' && (!/^\d{4}-\d{2}-\d{2}$/.test(s.dateKey) || key !== 'daily:' + s.dateKey))) return false;
+    if (s.mode === 'daily') {
+  const date = new Date(s.dateKey + 'T12:00:00Z');
+
+  if (!Number.isFinite(date.getTime())) return false;
+
+  const scheduled = solver.getDailyPuzzle(date);
+
+  if (s.start !== scheduled.start || s.target !== scheduled.target) {
+    return false;
+  }
+}  
     for (let i = 1; i < s.ladder.length; i++) {
       if (!solver.validateStep(s.ladder[i - 1], s.ladder[i]).valid || s.ladder[i - 1] === s.target) return false;
     }
@@ -185,7 +196,11 @@ class LadderGame {
     let streak = 0;
     if (mode === 'daily') {
       const dates = new Set(solved.map(r => r.date));
-      let day = Date.parse(new Date().toISOString().slice(0, 10) + 'T00:00:00Z');
+      let day = Date.parse(
+        new Date().toLocaleDateString('en-CA', {
+          timeZone: 'America/New_York'
+      }) + 'T00:00:00Z'
+);
       const today = new Date(day).toISOString().slice(0, 10);
       const failedToday = records.some(r => r.date === today && !r.solved);
       if (!dates.has(today)) day -= 86400000;

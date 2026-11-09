@@ -54,7 +54,7 @@ const UI = {
     goal.removeAttribute('role'); goal.removeAttribute('aria-label');
   },
   updateDayNotice() {
-    const old = game.gameMode === 'daily' && game.dateKey !== new Date().toISOString().slice(0, 10);
+    const old = game.gameMode === 'daily' && game.dateKey !== new Date().toLocaleDateString('en-CA', {timeZone: 'America/New_York'});
     document.getElementById('day-notice').hidden = !old;
   },
   renderLadder() {
@@ -236,7 +236,7 @@ const UI = {
     }
     document.getElementById('win-assistance').textContent = game.hintsUsed + ' hints used · ' + game.undosUsed + ' of 2 undos used';
     document.getElementById('next-daily').textContent = game.gameMode === 'daily' ? 'New daily at 00:00 UTC. More puzzles in Practice.' : '';
-    if (typeof WinMemes !== 'undefined') WinMemes.render(game.gameMode, game.gameMode === 'daily' ? game.dateKey : new Date().toISOString().slice(0,10), game.revealed);
+    if (typeof WinMemes !== 'undefined') WinMemes.render(game.gameMode, game.gameMode === 'daily' ? game.dateKey : new Date().toLocaleDateString('en-CA', {timeZone: 'America/New_York'}), game.revealed);
     this.openModal('modal-win');
   },
   openSolutionModal(path) {

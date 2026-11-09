@@ -1,4 +1,7 @@
 /* Ladderle: one dictionary for validation, shortest routes and generation. */
+const DAILY_OVERRIDES = {
+  '2026-11-09' : { start: 'POPE', target: 'OATH'}
+};
 class WordLadderSolver {
   constructor() { this.buckets = new Map(); this.ready = false; this.dailyPool = null; this.preferredWords = new Set(DAILY_WORDS); }
   initialize() {
@@ -86,9 +89,30 @@ class WordLadderSolver {
         DICTIONARY_SET.has(p.target) && p.minSteps >= 4 && p.minSteps <= 6);
     }
     if (!this.dailyPool.length) throw new Error('No valid daily puzzles are available.');
-    const dateKey = date.toISOString().slice(0, 10);
+    const dateKey = date.toLocaleDateString('en-CA', { timeZone: 'America/New_York'});
     const day = Math.floor(Date.parse(dateKey + 'T00:00:00Z') / 86400000);
     const epoch = Math.floor(Date.UTC(2026, 9, 29) / 86400000);
+    const custom = DAILY_OVERRIDES[dateKey];
+
+if (custom) {
+  const start = String(custom.start || '').trim().toUpperCase();
+  const target = String(custom.target || '').trim().toUpperCase();
+  const solution = this.findShortestPath(start, target);
+  const moves = solution ? solution.length - 1 : 0;
+
+  if (moves >= 4 && moves <= 6) {
+    return {
+      start,
+      target,
+      minSteps: moves,
+      solution,
+      dateKey,
+      puzzleNumber: day - epoch + 1
+    };
+  }
+
+  console.warn('Invalid override for ' + dateKey + '. Using automatic puzzle.');
+}
     const index = ((day - epoch) % this.dailyPool.length + this.dailyPool.length) % this.dailyPool.length;
     const puzzle = this.dailyPool[index];
     const route = this.findShortestPath(puzzle.start, puzzle.target);
