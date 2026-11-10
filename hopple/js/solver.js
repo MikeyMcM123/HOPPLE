@@ -1,6 +1,7 @@
-/* Ladderle: one dictionary for validation, shortest routes and generation. */
+
 const DAILY_OVERRIDES = {
-  '2026-11-09' : { start: 'POPE', target: 'OATH'}
+  '2026-11-09' : { start: 'POPE', target: 'OATH'},
+  '2026-11-11' : { start: 'SKID', target: 'MARK'},
 };
 class WordLadderSolver {
   constructor() { this.buckets = new Map(); this.ready = false; this.dailyPool = null; this.preferredWords = new Set(DAILY_WORDS); }
