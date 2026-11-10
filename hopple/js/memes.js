@@ -1,5 +1,12 @@
 /* Authored caption bank, selected by the puzzle's UTC date. No remote service. */
 const WinMemes = {
+  overrides : {
+    '2026-11-11': {
+      top:'When the toilet water',
+      bottom: 'splashes back',
+      image: 'assets/frog-meme.png',
+    },
+  },
   daily: [
     ['WHEN I NEED TO PAY TAXES', "BUT I'M A FROG"],
     ['WHEN YOU THINK YOU CAN FLY', "BUT YOU'RE A FROG"],
