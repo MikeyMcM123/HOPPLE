@@ -83,6 +83,11 @@ const WinMemes = {
     const day = Date.parse(dateKey + 'T00:00:00Z');
     if (!Number.isFinite(day)) throw new Error('Invalid meme date');
     if (mode === 'daily') {
+      const custom = this.overrides?.[dateKey];
+
+    if (custom) {
+      return { ...custom, reference: false };
+    }
       const epoch = Date.UTC(2026, 10, 8);
       const index = ((Math.floor((day - epoch) / 86400000) % this.daily.length) + this.daily.length) % this.daily.length;
       const [top, bottom] = this.daily[index];
