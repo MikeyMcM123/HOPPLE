@@ -2,6 +2,7 @@
 const DAILY_OVERRIDES = {
   '2026-11-09' : { start: 'POPE', target: 'OATH'},
   '2026-11-11' : { start: 'SKID', target: 'MARK'},
+  '2026-11-13' : { start: 'FART', target: 'POOP'},
 };
 class WordLadderSolver {
   constructor() { this.buckets = new Map(); this.ready = false; this.dailyPool = null; this.preferredWords = new Set(DAILY_WORDS); }

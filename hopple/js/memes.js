@@ -6,6 +6,12 @@ const WinMemes = {
       bottom: 'splashes back',
       image: 'assets/frog-meme.png',
     },
+    '2026-11-13': {
+      top: 'passing class',
+      bottom: 'more like passing gas',
+      image: 'assets/Kermit.jpg'
+
+    };
   },
   daily: [
     ['WHEN I NEED TO PAY TAXES', "BUT I'M A FROG"],
