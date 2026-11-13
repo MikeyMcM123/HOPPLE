@@ -9,7 +9,7 @@ const WinMemes = {
     '2026-11-13': {
       top: 'passing class',
       bottom: 'more like passing gas',
-      image: 'assets/Kermit.jpg'
+      image: 'assets/Kermit.jpg',
 
     };
   },
