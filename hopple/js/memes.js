@@ -11,7 +11,7 @@ const WinMemes = {
       bottom: 'more like passing gas',
       image: 'assets/Kermit.jpg',
 
-    };
+    },
   },
   daily: [
     ['WHEN I NEED TO PAY TAXES', "BUT I'M A FROG"],
